@@ -13,6 +13,31 @@ use Yii;
 
 class LikeController extends BaseController
 {
+    /**
+     * Evolars: curte (POST) ou descurte (DELETE) um objeto. Parâmetros: model, pk.
+     */
+    public function actionToggle()
+    {
+        $model = Yii::$app->request->get('model');
+        if (!is_string($model) || $model === '') {
+            return $this->returnError(400, 'Parameter model is required!');
+        }
+
+        $object = RecordMap::getByModelAndPk($model, (int)Yii::$app->request->get('pk'), ContentProvider::class);
+        if ($object === null) {
+            return $this->returnError(404, 'Object model not found!');
+        }
+
+        $likeService = new LikeService($object);
+        if (!$likeService->canLike()) {
+            return $this->returnError(403, 'You cannot like this content!');
+        }
+
+        Yii::$app->request->isDelete ? $likeService->unlike() : $likeService->like();
+
+        return ['liked' => $likeService->hasLiked(), 'total' => $likeService->getCount()];
+    }
+
     public function actionFindByObject()
     {
         $model = Yii::$app->request->get('model');

@@ -23,6 +23,9 @@ class LikeDefinitions
     {
         $result = [];
         $result['total'] = (new LikeService($record, new User()))->getCount();
+        // Evolars: indica se o usuário da requisição já curtiu
+        $me = \Yii::$app->user->getIdentity();
+        $result['liked'] = $me ? (new LikeService($record, $me))->hasLiked() : false;
         return $result;
     }
 

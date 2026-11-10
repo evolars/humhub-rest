@@ -139,6 +139,7 @@ class Events
             // Like
             ['pattern' => 'like/<id:\d+>', 'route' => 'rest/like/like/view', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'like/<id:\d+>', 'route' => 'rest/like/like/delete', 'verb' => 'DELETE'],
+            ['pattern' => 'like/toggle', 'route' => 'rest/like/like/toggle', 'verb' => ['POST', 'DELETE']],
             ['pattern' => 'like/find-by-object', 'route' => 'rest/like/like/find-by-object', 'verb' => 'GET'],
 
             // Post
