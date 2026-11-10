@@ -39,6 +39,14 @@ use Yii;
 
 class Events
 {
+    /**
+     * Evolars: registra o comando `php yii rest-setup`.
+     */
+    public static function onConsoleInit($event)
+    {
+        $event->sender->controllerMap['rest-setup'] = commands\SetupController::class;
+    }
+
     public static function onBeforeRequest($event)
     {
 
@@ -134,6 +142,7 @@ class Events
             ['pattern' => 'like/find-by-object', 'route' => 'rest/like/like/find-by-object', 'verb' => 'GET'],
 
             // Post
+            ['pattern' => 'post/feed', 'route' => 'rest/post/post/feed', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'post/', 'route' => 'rest/post/post/find', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'post/<id:\d+>', 'route' => 'rest/post/post/view', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'post/<id:\d+>', 'route' => 'rest/post/post/update', 'verb' => ['PUT', 'PATCH']],
