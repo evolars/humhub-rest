@@ -71,6 +71,7 @@ class Events
 
             // User: Default Controller
             ['pattern' => 'user/', 'route' => 'rest/user/user/index', 'verb' => ['GET', 'HEAD']],
+            ['pattern' => 'user/directory', 'route' => 'rest/user/user/directory', 'verb' => ['GET', 'HEAD']], // Evolars
             ['pattern' => 'user/get-by-username', 'route' => 'rest/user/user/get-by-username', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'user/get-by-email', 'route' => 'rest/user/user/get-by-email', 'verb' => ['GET', 'HEAD']],
             ['pattern' => 'user/get-by-authclient', 'route' => 'rest/user/user/get-by-authclient', 'verb' => ['GET', 'HEAD']],

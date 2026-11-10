@@ -52,6 +52,46 @@ class UserController extends BaseController
 
 
     /**
+     * Evolars: diretório de membros para o front da comunidade. Só contas ativas,
+     * sem administradores, com busca por nome, salão ou cidade.
+     */
+    public function actionDirectory($keyword = null)
+    {
+        $query = User::find()->active()
+            ->joinWith('profile')
+            ->andWhere(['!=', 'user.username', 'admin'])
+            ->andWhere(['NOT IN', 'user.id', (new \yii\db\Query())->select('user_id')->from('group_user')
+                ->innerJoin('group', 'group.id = group_user.group_id')->where(['group.is_admin_group' => 1])])
+            ->orderBy(['user.last_login' => SORT_DESC, 'user.id' => SORT_DESC]);
+
+        $keyword = trim((string) $keyword);
+        if ($keyword !== '') {
+            $query->andWhere(['OR',
+                ['like', 'profile.firstname', $keyword],
+                ['like', 'profile.lastname', $keyword],
+                ['like', 'profile.title', $keyword],
+                ['like', 'profile.city', $keyword],
+            ]);
+        }
+
+        $pagination = $this->handlePagination($query);
+        $results = [];
+        foreach ($query->all() as $user) {
+            $results[] = [
+                'id' => $user->id,
+                'guid' => $user->guid,
+                'display_name' => $user->displayName,
+                'title' => $user->profile->title,
+                'city' => $user->profile->city,
+                'state' => $user->profile->state,
+                'about' => $user->profile->about,
+                'last_login' => $user->last_login,
+            ];
+        }
+        return $this->returnPagination($query, $pagination, $results);
+    }
+
+    /**
      * Get User by username
      *
      * @param string $username the username searched
